@@ -52,7 +52,6 @@ byte Caracter_Grade[] = {
 void setup()
 {
     lcd.begin(16, 2);
-    randomSeed(5);
     lcd.createChar(0, Caracter_Grade);
     pinMode(trigPin, OUTPUT);
     pinMode(echoPin, INPUT);
@@ -140,43 +139,18 @@ void get_temp(){
     temperature = aux;
   }
 }
-
 void trigger_buzzer(){
-  //Verificam valorile
-  if(!buzzer_is_on){
-    if (temperature > 40.0 || temperature < 15.0){
-      analogWrite(buzzer_pin, 50);
-      buzzer_is_on = true;
-    }
-    else if (distanta > 7.0) {
-      analogWrite(buzzer_pin, 100);
-      buzzer_is_on = true;
+  if ( (temperature > 40.0 || temperature < 15.0) || distanta > 7.0){
+    analogWrite(buzzer_pin, 100);
+    if (distanta > 7.0){
       este_gol_rezervorul = true;
+    }else {
+      este_gol_rezervorul = false;
     }
   }else{
-    if(temperature >= 20.0 && temperature <= 40.0){
-      if(distanta > 7.0){
-        analogWrite(buzzer_pin, 100);
-        este_gol_rezervorul = true;
-      }
-      else{
-        analogWrite(buzzer_pin, 0);
-        buzzer_is_on = false;
-        este_gol_rezervorul = false;
-      }
-    }
-    else if (distanta <= 7.0){
-      if (temperature > 40.0 || temperature < 15.0){
-        analogWrite(buzzer_pin, 50);
-        este_gol_rezervorul = false;
-      }
-      else {
-        analogWrite(buzzer_pin, 0);
-        buzzer_is_on = false;
-        este_gol_rezervorul = false;
-      }
-    }
-  }
+    analogWrite(buzzer_pin, 0);
+    este_gol_rezervorul = false;
+  } 
 }
 
 void check_button(){
